@@ -1,5 +1,5 @@
 ext.versions = [
-        minSdk            : 14,
+        minSdk            : 17,
         compileSdk        : 27,
         buildTools        : '27.0.3',
         publishVersion    : '0.9.6.0',
@@ -9,8 +9,5 @@ ext.versions = [
         findBugs          : '3.0.2',
         bintrayRelease    : '0.8.1',
         kotlin            : '1.2.40',
-
-        supportLib        : '27.1.1',
-        mdProgressBar     : '1.4.2',
-        butterKnife       : '8.8.1'
+        supportLib        : '27.1.1'
 ]
