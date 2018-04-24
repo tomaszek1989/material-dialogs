@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import android.view.ViewTreeObserver
 import android.webkit.WebView
 import android.widget.AdapterView
 import android.widget.Button
@@ -53,6 +54,15 @@ internal fun <T : View> T.updatePadding(
 //  this.layoutParams = layoutParams
 //}
 
+internal inline fun <T : View> T.waitForLayout(crossinline f: () -> Unit) = with(viewTreeObserver) {
+  addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+    override fun onGlobalLayout() {
+      removeOnGlobalLayoutListener(this)
+      f()
+    }
+  })
+}
+
 internal fun <T : View> T.dimenPx(@DimenRes res: Int): Int {
   return context.resources.getDimensionPixelSize(res)
 }
@@ -68,60 +78,4 @@ internal fun <T : View> T.isVisible(): Boolean {
 @Suppress("UNCHECKED_CAST")
 internal operator fun <T : ViewGroup, R : View> T.get(index: Int): R? {
   return getChildAt(index) as? R
-}
-
-internal fun <T : View> T.isScrollable(): Boolean {
-  return when (this) {
-    is MDScrollView -> this.isScrollable
-    is RecyclerView -> this.canScroll()
-    is WebView -> this.canScroll()
-    is AdapterView<*> -> this.canScroll()
-    is ScrollView -> this.canScroll()
-    else -> false
-  }
-}
-
-internal fun <T : View> T.isScrolled(): Boolean {
-  return when (this) {
-    is RecyclerView -> this.childCount > 0 && this.getChildAt(0).top != 0
-    is AdapterView<*> -> this.firstVisiblePosition > 0
-    is ScrollView -> this.scrollY > 0
-    is WebView -> this.scrollY > 0
-    else -> false
-  }
-}
-
-private fun ScrollView.canScroll(): Boolean {
-  return if (childCount == 0) {
-    false
-  } else {
-    val childHeight = getChildAt(0).measuredHeight
-    measuredHeight - paddingTop - paddingBottom < childHeight
-  }
-}
-
-private fun RecyclerView.canScroll(): Boolean {
-  return layoutManager != null && layoutManager.canScrollVertically()
-}
-
-private fun WebView.canScroll(): Boolean {
-  return measuredHeight < contentHeight * scale
-}
-
-private fun AdapterView<*>.canScroll(): Boolean {
-  return if (lastVisiblePosition == -1) {
-    false
-  } else {
-    val firstItemVisible = firstVisiblePosition == 0
-    val lastItemVisible = lastVisiblePosition == count - 1
-    if (firstItemVisible && lastItemVisible && childCount > 0) {
-      if (getChildAt(0).top < paddingTop) {
-        true
-      } else {
-        getChildAt(childCount - 1).bottom > height - paddingBottom
-      }
-    } else {
-      true
-    }
-  }
 }

@@ -61,6 +61,8 @@ internal class MDRootView(
 
   private var debugPaint: Paint? = null
   private val dividerPaint: Paint
+  private var showTopDivider = false
+  private var showBottomDivider = false
 
   private lateinit var frameMain: ViewGroup
   private lateinit var titleView: TextView
@@ -72,6 +74,15 @@ internal class MDRootView(
     dividerPaint.style = STROKE
     dividerPaint.strokeWidth = context.resources.getDimension(R.dimen.md_divider_height)
     dividerPaint.isAntiAlias = true
+  }
+
+  internal fun invalidateDividers(
+    scrolledDown: Boolean,
+    atBottom: Boolean
+  ) {
+    showTopDivider = scrolledDown
+    showBottomDivider = atBottom
+    invalidate()
   }
 
   override fun onFinishInflate() {
@@ -183,15 +194,26 @@ internal class MDRootView(
 
   override fun onDraw(canvas: Canvas) {
     super.onDraw(canvas)
+
+    val buttonFrameHeight = getTotalButtonFrameHeight()
+    val mainFrameTop = getMainFrameTopPadding()
     dividerPaint.color = getDividerColor()
+
+    if (showTopDivider && titleView.isVisible()) {
+      val topDividerY = (titleView.bottom + titleFrameMarginBottom + mainFrameTop).toFloat()
+      canvas.drawLine(0f, topDividerY, measuredWidth.toFloat(), topDividerY, dividerPaint)
+    }
+    if (showBottomDivider && buttonFrameHeight > 0) {
+      val bottomDividerY = (measuredHeight - buttonFrameHeight).toFloat()
+      canvas.drawLine(0f, bottomDividerY, measuredWidth.toFloat(), bottomDividerY, dividerPaint)
+    }
+
     if (!debugMode) {
       return
     }
 
-    val buttonFrameHeight = getTotalButtonFrameHeight()
     val debugColorTeal = Color.parseColor("#B4F9FA")
     val debugColorPink = Color.parseColor("#E79ACA")
-    val mainFrameTop = getMainFrameTopPadding()
 
     if (debugPaint == null) {
       debugPaint = Paint()

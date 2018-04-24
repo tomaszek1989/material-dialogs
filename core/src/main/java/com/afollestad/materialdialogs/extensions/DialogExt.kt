@@ -90,6 +90,7 @@ internal fun MaterialDialog.addContentScrollView() {
     return
   }
   this.contentScrollView = inflate(context, R.layout.md_dialog_stub_scrollview, this.mainFrame)
+  this.contentScrollView!!.rootView = this.view
   this.contentScrollViewFrame = this.contentScrollView!![0]
   this.mainFrame.addView(this.contentScrollView)
 }

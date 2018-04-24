@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.extensions.inflate
 import com.afollestad.materialdialogs.extensions.setText
 import com.afollestad.materialdialogs.extensions.setWindowConstraints
+import com.afollestad.materialdialogs.internal.MDRecyclerView
 import com.afollestad.materialdialogs.internal.MDRootView
 import com.afollestad.materialdialogs.internal.MDScrollView
 
@@ -40,7 +41,7 @@ class MaterialDialog(
   internal var textViewMessage: TextView? = null
   internal var contentScrollView: MDScrollView? = null
   internal var contentScrollViewFrame: LinearLayout? = null
-  internal var contentRecyclerView: RecyclerView? = null
+  internal var contentRecyclerView: MDRecyclerView? = null
 
   init {
     data[KEY_AUTO_DISMISS] = true
