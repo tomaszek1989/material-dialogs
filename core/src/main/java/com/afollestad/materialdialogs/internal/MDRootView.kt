@@ -8,6 +8,7 @@ import android.graphics.Paint.Style
 import android.graphics.Paint.Style.STROKE
 import android.support.annotation.ColorInt
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -15,8 +16,9 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.R
 import com.afollestad.materialdialogs.Theme
 import com.afollestad.materialdialogs.Theme.LIGHT
-import com.afollestad.materialdialogs.extensions.dp
+import com.afollestad.materialdialogs.extensions.dimenPx
 import com.afollestad.materialdialogs.extensions.isVisible
+import com.afollestad.materialdialogs.extensions.updatePadding
 
 internal class MDRootView(
   context: Context,
@@ -25,20 +27,14 @@ internal class MDRootView(
 
   var maxHeight: Int = 0
 
-  private val dialogFrameMargin =
-    context.resources.getDimensionPixelSize(R.dimen.md_dialog_frame_margin)
-        .toFloat()
-  private val titleFrameMarginBottom =
-    context.resources.getDimensionPixelSize(R.dimen.md_title_frame_margin_bottom)
-        .toFloat()
-  private val buttonHeightDefault =
-    context.resources.getDimensionPixelSize(R.dimen.md_action_button_height)
-  private val buttonHeightStacked =
-    context.resources.getDimensionPixelSize(R.dimen.md_stacked_action_button_height)
-  private val buttonFramePadding =
-    context.resources.getDimensionPixelSize(R.dimen.md_action_button_frame_padding)
-  private val buttonSpacing =
-    context.resources.getDimensionPixelSize(R.dimen.md_action_button_spacing)
+  private val dialogFrameMargin = dimenPx(R.dimen.md_dialog_frame_margin)
+  private val dialogFrameMarginHalf = dimenPx(R.dimen.md_dialog_frame_margin_half)
+
+  private val titleFrameMarginBottom = dimenPx(R.dimen.md_title_frame_margin_bottom)
+  private val buttonHeightDefault = dimenPx(R.dimen.md_action_button_height)
+  private val buttonHeightStacked = dimenPx(R.dimen.md_stacked_action_button_height)
+  private val buttonFramePadding = dimenPx(R.dimen.md_action_button_frame_padding)
+  private val buttonSpacing = dimenPx(R.dimen.md_action_button_spacing)
 
   var debugMode: Boolean = false
     set(value) {
@@ -86,6 +82,12 @@ internal class MDRootView(
     widthMeasureSpec: Int,
     heightMeasureSpec: Int
   ) {
+    val contentBottomPadding = getContentBottomPadding()
+    if (contentBottomPadding > 0) {
+      val recyclerView = frameMain.getChildAt(1)
+      recyclerView.updatePadding(bottom = contentBottomPadding)
+    }
+
     val width = MeasureSpec.getSize(widthMeasureSpec)
     var height = MeasureSpec.getSize(heightMeasureSpec)
     if (height > maxHeight) {
@@ -94,21 +96,26 @@ internal class MDRootView(
 
     measureButtons(width)
     val buttonFrameHeight = getTotalButtonFrameHeight()
-
-    val mainFrameMaxHeight = height - buttonFrameHeight
+    val mainFrameTopPadding = getMainFrameTopPadding()
+    val mainFrameMaxHeight =
+      height - mainFrameTopPadding - buttonFrameHeight
     frameMain.measure(
         MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
         MeasureSpec.makeMeasureSpec(mainFrameMaxHeight, MeasureSpec.AT_MOST)
     )
 
-    if (frameMain.measuredHeight + buttonFrameHeight < height) {
-      height = frameMain.measuredHeight + buttonFrameHeight
+    val totalDialogHeight =
+      frameMain.measuredHeight + buttonFrameHeight + mainFrameTopPadding
+    if (totalDialogHeight < height) {
+      // We can reduce the height even more since the content doesn't need all this space
+      height = totalDialogHeight
     }
     setMeasuredDimension(width, height)
   }
 
   private fun measureButtons(parentWidth: Int) {
-    for (button in getVisibleButtons()) {
+    val visibleButtons = getVisibleButtons()
+    for (button in visibleButtons) {
       button.update(theme, stackButtons)
       if (stackButtons) {
         button.measure(
@@ -123,7 +130,7 @@ internal class MDRootView(
       }
     }
 
-    if (!stackButtons) {
+    if (visibleButtons.isNotEmpty() && !stackButtons) {
       var totalWidth = 0
       for (button in getVisibleButtons()) {
         totalWidth += button.measuredWidth + buttonSpacing
@@ -161,10 +168,10 @@ internal class MDRootView(
         rightX = leftX - buttonSpacing
       }
     }
-
     // Main frame
-    val frameButtonsTop = bottom - buttonFrameHeight
-    frameMain.layout(0, 0, measuredWidth, frameButtonsTop)
+    val frameButtonsTop = (measuredHeight - buttonFrameHeight)
+    val mainFrameTop = getMainFrameTopPadding()
+    frameMain.layout(0, mainFrameTop, measuredWidth, frameButtonsTop)
   }
 
   override fun onDraw(canvas: Canvas) {
@@ -177,6 +184,7 @@ internal class MDRootView(
     val buttonFrameHeight = getTotalButtonFrameHeight()
     val debugColorTeal = Color.parseColor("#B4F9FA")
     val debugColorPink = Color.parseColor("#E79ACA")
+    val mainFrameTop = getMainFrameTopPadding()
 
     if (debugPaint == null) {
       debugPaint = Paint()
@@ -188,80 +196,102 @@ internal class MDRootView(
     // Main frame fill
     debugPaint!!.color = debugColorTeal
     canvas.drawRect(
-        0f, 0f, measuredWidth.toFloat(), measuredHeight - buttonFrameHeight.toFloat(),
+        0f, 0f,
+        measuredWidth.toFloat(),
+        measuredHeight - buttonFrameHeight.toFloat(),
         debugPaint!!
     )
 
     // Hollow title frame fill
-    var titleFrameBottomY = dialogFrameMargin + titleView.measuredHeight
     debugPaint!!.color = Color.WHITE
+    var contentTopY: Int = mainFrameTop
     if (titleView.isVisible()) {
+      contentTopY = mainFrameTop + titleView.measuredHeight + titleFrameMarginBottom
       canvas.drawRect(
-          dialogFrameMargin, dialogFrameMargin, measuredWidth - dialogFrameMargin,
-          titleFrameBottomY,
+          dialogFrameMargin.toFloat(),
+          mainFrameTop.toFloat(),
+          measuredWidth - dialogFrameMargin.toFloat(),
+          contentTopY.toFloat() - titleFrameMarginBottom,
           debugPaint!!
       )
-    } else {
-      // 4dp, added to 20dp, makes 24dp
-      titleFrameBottomY = 4.dp(resources)
     }
 
     // Hollow content frame fill
-    val contentHollowStopY = measuredHeight - buttonFrameHeight - dialogFrameMargin
+    val contentHollowStopY = measuredHeight - buttonFrameHeight - mainFrameTop
     canvas.drawRect(
-        dialogFrameMargin, titleFrameBottomY + titleFrameMarginBottom,
-        measuredWidth - dialogFrameMargin,
-        contentHollowStopY,
+        dialogFrameMargin.toFloat(),
+        contentTopY.toFloat(),
+        measuredWidth - dialogFrameMargin.toFloat(),
+        contentHollowStopY.toFloat(),
         debugPaint!!
     )
 
     // Button frame fill
-    debugPaint!!.color = debugColorPink
-    canvas.drawRect(
-        0f, measuredHeight - buttonFrameHeight.toFloat(), measuredWidth.toFloat(),
-        measuredHeight.toFloat(), debugPaint!!
-    )
-
-    if (stackButtons) {
-      // Button fills
-      debugPaint!!.color = Color.WHITE
-      debugPaint!!.style = Style.FILL_AND_STROKE
-      for (button in getVisibleButtons()) {
-        canvas.drawRect(
-            button.left.toFloat(), button.top.toFloat(), button.right.toFloat(),
-            button.bottom.toFloat(), debugPaint!!
-        )
-      }
-      // Button outlines
+    if (buttonFrameHeight > 0) {
       debugPaint!!.color = debugColorPink
-      debugPaint!!.style = Style.STROKE
-      for (button in getVisibleButtons()) {
-        canvas.drawRect(
-            button.left.toFloat(), button.top.toFloat(), button.right.toFloat(),
-            button.bottom.toFloat(), debugPaint!!
-        )
-      }
-      debugPaint!!.style = Style.FILL_AND_STROKE
       canvas.drawRect(
-          0f, measuredHeight - buttonFramePadding.toFloat(), measuredWidth.toFloat(),
-          measuredHeight.toFloat(), debugPaint!!
+          0f,
+          measuredHeight - buttonFrameHeight.toFloat(),
+          measuredWidth.toFloat(),
+          measuredHeight.toFloat(),
+          debugPaint!!
       )
-    } else {
-      // Hollow button frame fill
-      debugPaint!!.color = Color.WHITE
-      val topY = (measuredHeight - (buttonFrameHeight - buttonFramePadding)).toFloat()
-      val bottomY = (measuredHeight - buttonFramePadding).toFloat()
-      canvas.drawRect(
-          dialogFrameMargin, topY, measuredWidth - buttonFramePadding.toFloat(),
-          bottomY, debugPaint!!
-      )
-      // Button highlight and spacing fill
-      debugPaint!!.color = debugColorTeal
-      for (button in getVisibleButtons()) {
+
+      if (stackButtons) {
+        // Button fills
+        debugPaint!!.color = Color.WHITE
+        debugPaint!!.style = Style.FILL_AND_STROKE
+        for (button in getVisibleButtons()) {
+          canvas.drawRect(
+              button.left.toFloat(),
+              button.top.toFloat(),
+              button.right.toFloat(),
+              button.bottom.toFloat(),
+              debugPaint!!
+          )
+        }
+        // Button outlines
+        debugPaint!!.color = debugColorPink
+        debugPaint!!.style = Style.STROKE
+        for (button in getVisibleButtons()) {
+          canvas.drawRect(
+              button.left.toFloat(),
+              button.top.toFloat(),
+              button.right.toFloat(),
+              button.bottom.toFloat(),
+              debugPaint!!
+          )
+        }
+        debugPaint!!.style = Style.FILL_AND_STROKE
         canvas.drawRect(
-            button.left.toFloat(), button.top.toFloat(), button.right.toFloat(),
-            button.bottom.toFloat(), debugPaint!!
+            0f,
+            measuredHeight - buttonFramePadding.toFloat(),
+            measuredWidth.toFloat(),
+            measuredHeight.toFloat()
+            , debugPaint!!
         )
+      } else {
+        // Hollow button frame fill
+        debugPaint!!.color = Color.WHITE
+        val topY = (measuredHeight - (buttonFrameHeight - buttonFramePadding)).toFloat()
+        val bottomY = (measuredHeight - buttonFramePadding).toFloat()
+        canvas.drawRect(
+            mainFrameTop.toFloat(),
+            topY,
+            measuredWidth - buttonFramePadding.toFloat(),
+            bottomY,
+            debugPaint!!
+        )
+        // Button highlight and spacing fill
+        debugPaint!!.color = debugColorTeal
+        for (button in getVisibleButtons()) {
+          canvas.drawRect(
+              button.left.toFloat(),
+              button.top.toFloat(),
+              button.right.toFloat(),
+              button.bottom.toFloat(), debugPaint!!
+          )
+        }
       }
     }
   }
@@ -279,10 +309,39 @@ internal class MDRootView(
 
   /** Buttons plus any spacing around that makes up the "frame" */
   private fun getTotalButtonFrameHeight(): Int {
-    return if (stackButtons) {
-      (getVisibleButtons().size * buttonHeightStacked) + buttonFramePadding
-    } else {
-      buttonHeightDefault + (buttonFramePadding * 2)
+    val visibleButtons = getVisibleButtons()
+    return when {
+      visibleButtons.isEmpty() -> 0
+      stackButtons -> (visibleButtons.size * buttonHeightStacked) + buttonFramePadding
+      else -> buttonHeightDefault + (buttonFramePadding * 2)
     }
+  }
+
+  private fun getMainFrameTopPadding(): Int {
+    return if (shouldReduceMainFrameTopPadding()) dialogFrameMarginHalf else dialogFrameMargin
+  }
+
+  private fun shouldReduceMainFrameTopPadding(): Boolean {
+    return !titleView.isVisible()
+        && getVisibleButtons().isEmpty()
+        && frameMain.childCount > 1
+        && frameMain.getChildAt(1) is RecyclerView
+  }
+
+  private fun getContentBottomPadding(): Int {
+    return if (shouldAddContentBottomPadding()) {
+      when {
+        titleView.isVisible() -> dialogFrameMargin
+        getVisibleButtons().isNotEmpty() -> dialogFrameMargin
+        else -> dialogFrameMarginHalf
+      }
+    } else {
+      0
+    }
+  }
+
+  private fun shouldAddContentBottomPadding(): Boolean {
+    return frameMain.childCount > 1
+        && frameMain.getChildAt(1) is RecyclerView
   }
 }

@@ -3,10 +3,28 @@ package com.afollestad.materialdialogssample
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.extensions.listItems
 import com.afollestad.materialdialogs.extensions.message
 import kotlinx.android.synthetic.main.activity_main.basic
-import kotlinx.android.synthetic.main.activity_main.basicLongContent
-import kotlinx.android.synthetic.main.activity_main.basicNoTitle
+import kotlinx.android.synthetic.main.activity_main.basic_buttons
+import kotlinx.android.synthetic.main.activity_main.basic_long
+import kotlinx.android.synthetic.main.activity_main.basic_long_buttons
+import kotlinx.android.synthetic.main.activity_main.basic_long_titled
+import kotlinx.android.synthetic.main.activity_main.basic_long_titled_buttons
+import kotlinx.android.synthetic.main.activity_main.basic_titled
+import kotlinx.android.synthetic.main.activity_main.basic_titled_buttons
+import kotlinx.android.synthetic.main.activity_main.list
+import kotlinx.android.synthetic.main.activity_main.list_buttons
+import kotlinx.android.synthetic.main.activity_main.list_long
+import kotlinx.android.synthetic.main.activity_main.list_long_buttons
+import kotlinx.android.synthetic.main.activity_main.list_long_items
+import kotlinx.android.synthetic.main.activity_main.list_long_items_buttons
+import kotlinx.android.synthetic.main.activity_main.list_long_items_titled
+import kotlinx.android.synthetic.main.activity_main.list_long_items_titled_buttons
+import kotlinx.android.synthetic.main.activity_main.list_long_titled
+import kotlinx.android.synthetic.main.activity_main.list_long_titled_buttons
+import kotlinx.android.synthetic.main.activity_main.list_titled
+import kotlinx.android.synthetic.main.activity_main.list_titled_buttons
 
 /** @author Aidan Follestad (afollestad) */
 class MainActivity : AppCompatActivity() {
@@ -17,21 +35,180 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    basicNoTitle.setOnClickListener { onClickBasicNoTitle() }
-    basic.setOnClickListener { onClickBasic() }
-    basicLongContent.setOnClickListener { onClickBasicLongContent() }
+    basic.setOnClickListener {
+      MaterialDialog(this)
+          .message(textRes = R.string.shareLocationPrompt)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    basic_titled.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .message(textRes = R.string.useGoogleLocationServicesPrompt)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    basic_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .message(textRes = R.string.useGoogleLocationServicesPrompt)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    basic_titled_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .message(textRes = R.string.useGoogleLocationServicesPrompt)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    basic_long.setOnClickListener {
+      MaterialDialog(this)
+          .message(textRes = R.string.loremIpsum)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    basic_long_titled.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .message(textRes = R.string.loremIpsum)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    basic_long_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .message(textRes = R.string.loremIpsum)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    basic_long_titled_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .message(textRes = R.string.loremIpsum)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    // TODO checkbox prompt dialogs
+
+    list.setOnClickListener {
+      MaterialDialog(this)
+          .listItems(arrayRes = R.array.socialNetworks)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .listItems(arrayRes = R.array.socialNetworks)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_titled.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .listItems(arrayRes = R.array.socialNetworks)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_titled_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .listItems(arrayRes = R.array.socialNetworks)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_long.setOnClickListener {
+      MaterialDialog(this)
+          .listItems(arrayRes = R.array.states)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_long_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .listItems(arrayRes = R.array.states)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_long_titled.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .listItems(arrayRes = R.array.states)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_long_titled_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .listItems(arrayRes = R.array.states)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_long_items.setOnClickListener {
+      MaterialDialog(this)
+          .listItems(arrayRes = R.array.socialNetworks_longItems)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_long_items_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .listItems(arrayRes = R.array.socialNetworks_longItems)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_long_items_titled.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .listItems(arrayRes = R.array.socialNetworks_longItems)
+          .debugMode(debugMode)
+          .show()
+    }
+
+    list_long_items_titled_buttons.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .listItems(arrayRes = R.array.socialNetworks_longItems)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .debugMode(debugMode)
+          .show()
+    }
   }
 
-  private fun onClickBasicNoTitle() {
-    MaterialDialog(this)
-        .message(textRes = R.string.shareLocationPrompt)
-        .positiveButton(positiveRes = R.string.agree)
-        .negativeButton(negativeRes = R.string.disagree)
-        .debugMode(debugMode)
-        .show()
-  }
-
-  private fun onClickBasic() {
+  private fun onClickStacked() {
     MaterialDialog(this)
         .title(textRes = R.string.useGoogleLocationServices)
         .message(textRes = R.string.useGoogleLocationServicesPrompt)
@@ -42,13 +219,30 @@ class MainActivity : AppCompatActivity() {
         .show()
   }
 
-  private fun onClickBasicLongContent() {
+  private fun onClickNeutral() {
     MaterialDialog(this)
         .title(textRes = R.string.useGoogleLocationServices)
-        .message(textRes = R.string.loremIpsum)
+        .message(textRes = R.string.useGoogleLocationServicesPrompt)
         .positiveButton(positiveRes = R.string.agree)
         .negativeButton(negativeRes = R.string.disagree)
+        .neutralButton(neutralRes = R.string.more_info)
         .debugMode(debugMode)
         .show()
+  }
+
+  private fun onClickCallbacks() {
+    // TODO
+  }
+
+  private fun onClickListCheckPrompt() {
+    // TODO
+  }
+
+  private fun onClickListCheckPromptButtons() {
+    // TODO
+  }
+
+  private fun onClickListLongPress() {
+    // TODO
   }
 }

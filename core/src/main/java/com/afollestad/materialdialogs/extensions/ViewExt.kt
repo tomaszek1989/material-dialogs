@@ -1,6 +1,9 @@
 package com.afollestad.materialdialogs.extensions
 
+import android.support.annotation.DimenRes
+import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
@@ -13,6 +16,11 @@ import com.afollestad.materialdialogs.internal.MDScrollView
 /**
  * @author Aidan Follestad (afollestad)
  */
+
+@Suppress("UNCHECKED_CAST")
+internal fun <R : View> ViewGroup.inflate(@LayoutRes res: Int): R {
+  return LayoutInflater.from(context).inflate(res, this, false) as R
+}
 
 internal fun <T : View> T.updatePadding(
   left: Int = this.paddingLeft,
@@ -43,6 +51,10 @@ internal fun <T : View> T.updateMargin(
     layoutParams.bottomMargin = bottom
   }
   this.layoutParams = layoutParams
+}
+
+internal fun <T : View> T.dimenPx(@DimenRes res: Int): Int {
+  return context.resources.getDimensionPixelSize(res)
 }
 
 internal fun <T : View> T.isVisible(): Boolean {

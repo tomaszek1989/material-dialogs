@@ -41,7 +41,7 @@ internal fun MaterialDialog.setText(
   @StringRes textRes: Int = 0,
   text: CharSequence? = null,
   @StringRes fallback: Int = 0,
-  click: (() -> (Unit))? = null
+  click: ((MaterialDialog) -> (Unit))? = null
 ) {
   val textView = view.findViewById<TextView>(viewId)
   val value = text ?: getString(textRes, fallback)
@@ -57,7 +57,7 @@ internal fun MaterialDialog.setText(
         dismiss()
       }
       if (click != null) {
-        click()
+        click(this@setText)
       }
     }
   }

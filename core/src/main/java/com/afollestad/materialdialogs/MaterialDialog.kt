@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.support.annotation.StringRes
 import android.support.annotation.StyleRes
+import android.support.v7.widget.RecyclerView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.afollestad.materialdialogs.extensions.inflate
@@ -28,16 +29,17 @@ enum class Theme(@StyleRes val styleRes: Int) {
 
 class MaterialDialog(
   context: Context,
-  theme: Theme = Theme.LIGHT
+  internal var theme: Theme = Theme.LIGHT
 ) : Dialog(context, theme.styleRes) {
 
   internal val view: MDRootView = inflate(context, R.layout.md_dialog_base)
   internal val data: MutableMap<String, Any?> = mutableMapOf()
 
   internal val mainFrame: LinearLayout = view.findViewById(R.id.md_frame_main)
+  internal var textViewMessage: TextView? = null
   internal var contentScrollView: MDScrollView? = null
   internal var contentScrollViewFrame: LinearLayout? = null
-  internal var textViewMessage: TextView? = null
+  internal var contentRecyclerView: RecyclerView? = null
 
   init {
     data[KEY_AUTO_DISMISS] = true
@@ -55,7 +57,7 @@ class MaterialDialog(
   fun positiveButton(
     @StringRes positiveRes: Int = 0,
     positiveText: CharSequence? = null,
-    click: (() -> (Unit))? = null
+    click: ((MaterialDialog) -> (Unit))? = null
   ): MaterialDialog {
     setText(
         R.id.md_button_positive, positiveRes, positiveText,
@@ -67,7 +69,7 @@ class MaterialDialog(
   fun negativeButton(
     @StringRes negativeRes: Int = 0,
     negativeText: CharSequence? = null,
-    click: (() -> (Unit))? = null
+    click: ((MaterialDialog) -> (Unit))? = null
   ): MaterialDialog {
     setText(
         R.id.md_button_negative, negativeRes, negativeText,
@@ -79,7 +81,7 @@ class MaterialDialog(
   fun neutralButton(
     @StringRes neutralRes: Int = 0,
     neutralText: CharSequence? = null,
-    click: (() -> (Unit))? = null
+    click: ((MaterialDialog) -> (Unit))? = null
   ): MaterialDialog {
     assertOneSet(neutralRes, neutralText)
     setText(R.id.md_button_neutral, neutralRes, neutralText, click = click)

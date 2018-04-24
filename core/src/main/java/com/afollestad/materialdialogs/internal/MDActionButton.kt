@@ -8,6 +8,7 @@ import android.view.View
 import com.afollestad.materialdialogs.R
 import com.afollestad.materialdialogs.Theme
 import com.afollestad.materialdialogs.Theme.LIGHT
+import com.afollestad.materialdialogs.extensions.dimenPx
 import com.afollestad.materialdialogs.extensions.updatePadding
 
 /**
@@ -18,10 +19,8 @@ internal class MDActionButton(
   attrs: AttributeSet? = null
 ) : AppCompatButton(context, attrs) {
 
-  private val paddingDefault =
-    context.resources.getDimensionPixelSize(R.dimen.md_action_button_padding_horizontal)
-  private val paddingStacked =
-    context.resources.getDimensionPixelSize(R.dimen.md_stacked_action_button_padding_horizontal)
+  private val paddingDefault = dimenPx(R.dimen.md_action_button_padding_horizontal)
+  private val paddingStacked = dimenPx(R.dimen.md_stacked_action_button_padding_horizontal)
 
   init {
     isClickable = true
@@ -34,7 +33,7 @@ internal class MDActionButton(
   ) {
     // Selector
     val backgroundRes: Int = if (stacked) {
-      if (theme == LIGHT) R.drawable.md_selector else R.drawable.md_selector_dark
+      if (theme == LIGHT) R.drawable.md_item_selector else R.drawable.md_item_selector_dark
     } else {
       if (theme == LIGHT) R.drawable.md_btn_selector else R.drawable.md_btn_selector_dark
     }
@@ -42,7 +41,7 @@ internal class MDActionButton(
 
     // Padding
     val sidePadding = if (stacked) paddingStacked else paddingDefault
-    updatePadding(left = sidePadding, right = sidePadding)
+    updatePadding(left = sidePadding.toInt(), right = sidePadding.toInt())
 
     // Text alignment
     textAlignment = if (stacked) View.TEXT_ALIGNMENT_VIEW_END else View.TEXT_ALIGNMENT_CENTER
