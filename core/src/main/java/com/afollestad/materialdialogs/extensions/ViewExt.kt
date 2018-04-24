@@ -31,27 +31,27 @@ internal fun <T : View> T.updatePadding(
   this.setPadding(left, top, right, bottom)
 }
 
-internal fun <T : View> T.updateMargin(
-  left: Int = -1,
-  top: Int = -1,
-  right: Int = -1,
-  bottom: Int = -1
-) {
-  val layoutParams = this.layoutParams as MarginLayoutParams
-  if (left != -1) {
-    layoutParams.leftMargin = left
-  }
-  if (top != -1) {
-    layoutParams.topMargin = top
-  }
-  if (right != -1) {
-    layoutParams.rightMargin = right
-  }
-  if (bottom != -1) {
-    layoutParams.bottomMargin = bottom
-  }
-  this.layoutParams = layoutParams
-}
+//internal fun <T : View> T.updateMargin(
+//  left: Int = -1,
+//  top: Int = -1,
+//  right: Int = -1,
+//  bottom: Int = -1
+//) {
+//  val layoutParams = this.layoutParams as MarginLayoutParams
+//  if (left != -1) {
+//    layoutParams.leftMargin = left
+//  }
+//  if (top != -1) {
+//    layoutParams.topMargin = top
+//  }
+//  if (right != -1) {
+//    layoutParams.rightMargin = right
+//  }
+//  if (bottom != -1) {
+//    layoutParams.bottomMargin = bottom
+//  }
+//  this.layoutParams = layoutParams
+//}
 
 internal fun <T : View> T.dimenPx(@DimenRes res: Int): Int {
   return context.resources.getDimensionPixelSize(res)

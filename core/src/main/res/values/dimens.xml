@@ -11,7 +11,6 @@
   <dimen name="md_title_frame_margin_bottom">20dp</dimen>
 
   <dimen name="md_action_button_frame_padding">8dp</dimen>
-  <dimen name="md_action_button_frame_height">52dp</dimen>
 
   <dimen name="md_action_button_height">36dp</dimen>
   <dimen name="md_action_button_min_width">64dp</dimen>
@@ -27,7 +26,6 @@
   <dimen name="md_message_textsize">16sp</dimen>
 
   <dimen name="md_icon_margin">16dp</dimen>
-  <dimen name="md_icon_max_size">48dp</dimen>
 
   <dimen name="md_listitem_vertical_margin">12dp</dimen>
   <dimen name="md_listitem_vertical_margin_choice">8dp</dimen>

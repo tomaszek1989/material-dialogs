@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.afollestad.materialdialogs.extensions
 
 import android.support.annotation.ArrayRes

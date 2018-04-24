@@ -10,15 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.LinearLayout
-import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
 import com.afollestad.materialdialogs.KEY_AUTO_DISMISS
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.R
 import com.afollestad.materialdialogs.R.dimen
-import com.afollestad.materialdialogs.R.id
-import com.afollestad.materialdialogs.internal.MDScrollView
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T> MaterialDialog.inflate(

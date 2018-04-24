@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.activity_main.basic_long_titled
 import kotlinx.android.synthetic.main.activity_main.basic_long_titled_buttons
 import kotlinx.android.synthetic.main.activity_main.basic_titled
 import kotlinx.android.synthetic.main.activity_main.basic_titled_buttons
+import kotlinx.android.synthetic.main.activity_main.buttons_neutral
+import kotlinx.android.synthetic.main.activity_main.buttons_stacked
 import kotlinx.android.synthetic.main.activity_main.list
 import kotlinx.android.synthetic.main.activity_main.list_buttons
 import kotlinx.android.synthetic.main.activity_main.list_long
@@ -123,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 
     list_titled.setOnClickListener {
       MaterialDialog(this)
-          .title(textRes = R.string.useGoogleLocationServices)
+          .title(textRes = R.string.socialNetworks)
           .listItems(arrayRes = R.array.socialNetworks)
           .debugMode(debugMode)
           .show()
@@ -131,7 +133,7 @@ class MainActivity : AppCompatActivity() {
 
     list_titled_buttons.setOnClickListener {
       MaterialDialog(this)
-          .title(textRes = R.string.useGoogleLocationServices)
+          .title(textRes = R.string.socialNetworks)
           .listItems(arrayRes = R.array.socialNetworks)
           .positiveButton(positiveRes = R.string.agree)
           .negativeButton(negativeRes = R.string.disagree)
@@ -157,7 +159,7 @@ class MainActivity : AppCompatActivity() {
 
     list_long_titled.setOnClickListener {
       MaterialDialog(this)
-          .title(textRes = R.string.useGoogleLocationServices)
+          .title(textRes = R.string.states)
           .listItems(arrayRes = R.array.states)
           .debugMode(debugMode)
           .show()
@@ -165,7 +167,7 @@ class MainActivity : AppCompatActivity() {
 
     list_long_titled_buttons.setOnClickListener {
       MaterialDialog(this)
-          .title(textRes = R.string.useGoogleLocationServices)
+          .title(textRes = R.string.states)
           .listItems(arrayRes = R.array.states)
           .positiveButton(positiveRes = R.string.agree)
           .negativeButton(negativeRes = R.string.disagree)
@@ -191,7 +193,7 @@ class MainActivity : AppCompatActivity() {
 
     list_long_items_titled.setOnClickListener {
       MaterialDialog(this)
-          .title(textRes = R.string.useGoogleLocationServices)
+          .title(textRes = R.string.socialNetworks)
           .listItems(arrayRes = R.array.socialNetworks_longItems)
           .debugMode(debugMode)
           .show()
@@ -199,50 +201,34 @@ class MainActivity : AppCompatActivity() {
 
     list_long_items_titled_buttons.setOnClickListener {
       MaterialDialog(this)
-          .title(textRes = R.string.useGoogleLocationServices)
+          .title(textRes = R.string.socialNetworks)
           .listItems(arrayRes = R.array.socialNetworks_longItems)
           .positiveButton(positiveRes = R.string.agree)
           .negativeButton(negativeRes = R.string.disagree)
           .debugMode(debugMode)
           .show()
     }
-  }
 
-  private fun onClickStacked() {
-    MaterialDialog(this)
-        .title(textRes = R.string.useGoogleLocationServices)
-        .message(textRes = R.string.useGoogleLocationServicesPrompt)
-        .positiveButton(positiveText = "Hello World")
-        .negativeButton(negativeText = "How are you doing?")
-        .neutralButton(neutralText = "Testing long buttons")
-        .debugMode(debugMode)
-        .show()
-  }
+    buttons_stacked.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .message(textRes = R.string.useGoogleLocationServicesPrompt)
+          .positiveButton(positiveText = "Hello World")
+          .negativeButton(negativeText = "How are you doing?")
+          .neutralButton(neutralText = "Testing long buttons")
+          .debugMode(debugMode)
+          .show()
+    }
 
-  private fun onClickNeutral() {
-    MaterialDialog(this)
-        .title(textRes = R.string.useGoogleLocationServices)
-        .message(textRes = R.string.useGoogleLocationServicesPrompt)
-        .positiveButton(positiveRes = R.string.agree)
-        .negativeButton(negativeRes = R.string.disagree)
-        .neutralButton(neutralRes = R.string.more_info)
-        .debugMode(debugMode)
-        .show()
-  }
-
-  private fun onClickCallbacks() {
-    // TODO
-  }
-
-  private fun onClickListCheckPrompt() {
-    // TODO
-  }
-
-  private fun onClickListCheckPromptButtons() {
-    // TODO
-  }
-
-  private fun onClickListLongPress() {
-    // TODO
+    buttons_neutral.setOnClickListener {
+      MaterialDialog(this)
+          .title(textRes = R.string.useGoogleLocationServices)
+          .message(textRes = R.string.useGoogleLocationServicesPrompt)
+          .positiveButton(positiveRes = R.string.agree)
+          .negativeButton(negativeRes = R.string.disagree)
+          .neutralButton(neutralRes = R.string.more_info)
+          .debugMode(debugMode)
+          .show()
+    }
   }
 }

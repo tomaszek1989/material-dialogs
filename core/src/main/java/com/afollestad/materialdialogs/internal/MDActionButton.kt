@@ -44,7 +44,7 @@ internal class MDActionButton(
 
     // Padding
     val sidePadding = if (stacked) paddingStacked else paddingDefault
-    updatePadding(left = sidePadding.toInt(), right = sidePadding.toInt())
+    updatePadding(left = sidePadding, right = sidePadding)
 
     // Text alignment
     textAlignment = if (stacked) View.TEXT_ALIGNMENT_VIEW_END else View.TEXT_ALIGNMENT_CENTER

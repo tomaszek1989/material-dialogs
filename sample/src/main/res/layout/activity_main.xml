@@ -357,7 +357,7 @@
 
     <TextView
         style="@style/SampleHeader"
-        android:text="@string/custom_views"
+        android:text="Custom Views"
         />
 
     <Button
@@ -482,7 +482,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/sample_button_height"
         android:layout_marginTop="@dimen/sample_button_spacing"
-        android:text="@string/progress_dialog_indeterminate_horizontal"
+        android:text="Indeterminate Progress, Horizontal"
         />
 
     <!-- Misc -->

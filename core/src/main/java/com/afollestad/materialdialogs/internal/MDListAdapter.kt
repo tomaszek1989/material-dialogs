@@ -11,7 +11,6 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.KEY_AUTO_DISMISS
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.R
-import com.afollestad.materialdialogs.Theme
 import com.afollestad.materialdialogs.Theme.LIGHT
 import com.afollestad.materialdialogs.extensions.get
 import com.afollestad.materialdialogs.extensions.inflate

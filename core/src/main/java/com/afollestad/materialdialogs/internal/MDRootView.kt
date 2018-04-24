@@ -53,7 +53,7 @@ internal class MDRootView(
       field = value
       requestLayout()
     }
-  var stackButtons: Boolean = false
+  private var stackButtons: Boolean = false
     set(value) {
       field = value
       requestLayout()
