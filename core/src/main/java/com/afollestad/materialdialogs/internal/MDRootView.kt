@@ -22,7 +22,7 @@ import com.afollestad.materialdialogs.extensions.updatePadding
 
 /**
  * Handles all measurement and positioning of the dialog and its views. Helps us inflate quickly,
- * adapt to scenarios quickly, and get around weight dialog height stuff which would occur
+ * adapt to scenarios quickly, and get around weird dialog height behavior which would occur
  * if we used straight-up stock views only.
  *
  * @author Aidan Follestad (afollestad)
