@@ -97,7 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/sample_button_height"
         android:layout_marginTop="@dimen/sample_button_spacing"
-        android:text="Basic + Checkbox Prompt"
+        android:text="Basic + Checkbox"
         />
 
     <Button
@@ -105,7 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/sample_button_height"
         android:layout_marginTop="@dimen/sample_button_spacing"
-        android:text="Basic + Checkbox Prompt + Buttons"
+        android:text="Basic + Checkbox + Buttons"
         />
 
     <Button
@@ -113,7 +113,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/sample_button_height"
         android:layout_marginTop="@dimen/sample_button_spacing"
-        android:text="Basic + Checkbox Prompt"
+        android:text="Basic + Checkbox + Title"
         />
 
     <Button
@@ -121,7 +121,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/sample_button_height"
         android:layout_marginTop="@dimen/sample_button_spacing"
-        android:text="Basic + Checkbox Prompt"
+        android:text="Basic + Checkbox + Title + Buttons"
         />
 
     <!-- Basic Lists -->
