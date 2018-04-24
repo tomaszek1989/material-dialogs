@@ -20,6 +20,13 @@ import com.afollestad.materialdialogs.extensions.dimenPx
 import com.afollestad.materialdialogs.extensions.isVisible
 import com.afollestad.materialdialogs.extensions.updatePadding
 
+/**
+ * Handles all measurement and positioning of the dialog and its views. Helps us inflate quickly,
+ * adapt to scenarios quickly, and get around weight dialog height stuff which would occur
+ * if we used straight-up stock views only.
+ *
+ * @author Aidan Follestad (afollestad)
+ */
 internal class MDRootView(
   context: Context,
   attrs: AttributeSet?
@@ -296,12 +303,14 @@ internal class MDRootView(
     }
   }
 
+  /** Gets the divider color, based on if the dialog is using the light or dark theme. */
   @ColorInt
   private fun getDividerColor(): Int {
     val colorRes = if (theme == LIGHT) R.color.md_divider_black else R.color.md_divider_white
     return ContextCompat.getColor(context, colorRes)
   }
 
+  /** Gets an array of the visible action buttons (action buttons with text). */
   private fun getVisibleButtons(): Array<MDActionButton> {
     return actionButtons.filter { it.isVisible() }
         .toTypedArray()
@@ -317,10 +326,15 @@ internal class MDRootView(
     }
   }
 
+  /** If [shouldReduceMainFrameTopPadding] returns true, 12dp else 24dp. */
   private fun getMainFrameTopPadding(): Int {
     return if (shouldReduceMainFrameTopPadding()) dialogFrameMarginHalf else dialogFrameMargin
   }
 
+  /**
+   * Returns true if we want to reduce the padding of the top of the dialog from 24dp to 12dp,
+   * which happens if we are showing a list dialog with no title and no action buttons.
+   */
   private fun shouldReduceMainFrameTopPadding(): Boolean {
     return !titleView.isVisible()
         && getVisibleButtons().isEmpty()
@@ -328,6 +342,10 @@ internal class MDRootView(
         && frameMain.getChildAt(1) is RecyclerView
   }
 
+  /**
+   * If [shouldAddContentBottomPadding] returns false, will return 0. Otherwise,
+   * returns 24dp if we have a title frame or button frame, else 12dp.
+   */
   private fun getContentBottomPadding(): Int {
     return if (shouldAddContentBottomPadding()) {
       when {
@@ -340,6 +358,10 @@ internal class MDRootView(
     }
   }
 
+  /**
+   * We want to add padding to the content view (the view below the title) if the content view
+   * is a RecyclerView, meaning we're showing a list dialog.
+   */
   private fun shouldAddContentBottomPadding(): Boolean {
     return frameMain.childCount > 1
         && frameMain.getChildAt(1) is RecyclerView

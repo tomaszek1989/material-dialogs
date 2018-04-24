@@ -12,6 +12,9 @@ import com.afollestad.materialdialogs.extensions.dimenPx
 import com.afollestad.materialdialogs.extensions.updatePadding
 
 /**
+ * Represents an action button in a dialog, positive, negative, or neutral. Handles switching
+ * out its selector, padding, and text alignment based on whether buttons are in stacked mode or not.
+ *
  * @author Aidan Follestad (afollestad)
  */
 internal class MDActionButton(

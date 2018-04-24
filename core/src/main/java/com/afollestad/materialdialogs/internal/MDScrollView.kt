@@ -7,6 +7,9 @@ import android.widget.ScrollView
 import com.afollestad.materialdialogs.extensions.get
 
 /**
+ * A [ScrollView] which reports whether or not it's scrollable based on whether the content
+ * is shorter than the ScrollView itself.
+ *
  * @author Aidan Follestad (afollestad)
  */
 internal class MDScrollView(

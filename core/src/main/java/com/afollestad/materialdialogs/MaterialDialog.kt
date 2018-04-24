@@ -27,6 +27,7 @@ enum class Theme(@StyleRes val styleRes: Int) {
   DARK(R.style.MD_Dark)
 }
 
+/** @author Aidan Follestad (afollestad) */
 class MaterialDialog(
   context: Context,
   internal var theme: Theme = Theme.LIGHT

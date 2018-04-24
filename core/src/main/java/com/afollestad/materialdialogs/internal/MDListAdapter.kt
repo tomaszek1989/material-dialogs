@@ -16,6 +16,7 @@ import com.afollestad.materialdialogs.Theme.LIGHT
 import com.afollestad.materialdialogs.extensions.get
 import com.afollestad.materialdialogs.extensions.inflate
 
+/** @author Aidan Follestad (afollestad) */
 internal class MDListViewHolder(
   itemView: View,
   adapter: MDListAdapter,
@@ -33,6 +34,11 @@ internal class MDListViewHolder(
   val titleView: TextView = (itemView as ViewGroup)[0]!!
 }
 
+/**
+ * The default list adapter for list dialogs, containing plain textual list items.
+ *
+ * @author Aidan Follestad (afollestad)
+ */
 internal class MDListAdapter(
   private var dialog: MaterialDialog,
   @LayoutRes private var itemLayout: Int,
