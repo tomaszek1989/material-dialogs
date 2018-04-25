@@ -2,9 +2,7 @@ package com.afollestad.materialdialogs.internal
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Paint.Style
 import android.graphics.Paint.Style.STROKE
 import android.util.AttributeSet
 import android.view.ViewGroup
@@ -13,7 +11,6 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.R
 import com.afollestad.materialdialogs.Theme
 import com.afollestad.materialdialogs.extensions.dimenPx
-import com.afollestad.materialdialogs.extensions.isVisible
 import com.afollestad.materialdialogs.extensions.updatePadding
 
 /**
