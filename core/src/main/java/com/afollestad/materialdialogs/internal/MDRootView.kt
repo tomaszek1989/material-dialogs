@@ -6,16 +6,12 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Paint.Style
 import android.graphics.Paint.Style.STROKE
-import android.support.annotation.ColorInt
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.afollestad.materialdialogs.R
 import com.afollestad.materialdialogs.Theme
-import com.afollestad.materialdialogs.Theme.LIGHT
 import com.afollestad.materialdialogs.extensions.dimenPx
 import com.afollestad.materialdialogs.extensions.isVisible
 import com.afollestad.materialdialogs.extensions.updatePadding
@@ -34,14 +30,14 @@ internal class MDRootView(
 
   var maxHeight: Int = 0
 
-  private val dialogFrameMargin = dimenPx(R.dimen.md_dialog_frame_margin)
-  private val dialogFrameMarginHalf = dimenPx(R.dimen.md_dialog_frame_margin_half)
+  internal val dialogFrameMargin = dimenPx(R.dimen.md_dialog_frame_margin)
+  internal val dialogFrameMarginHalf = dimenPx(R.dimen.md_dialog_frame_margin_half)
 
-  private val titleFrameMarginBottom = dimenPx(R.dimen.md_title_frame_margin_bottom)
-  private val buttonHeightDefault = dimenPx(R.dimen.md_action_button_height)
-  private val buttonHeightStacked = dimenPx(R.dimen.md_stacked_action_button_height)
-  private val buttonFramePadding = dimenPx(R.dimen.md_action_button_frame_padding)
-  private val buttonSpacing = dimenPx(R.dimen.md_action_button_spacing)
+  internal val titleFrameMarginBottom = dimenPx(R.dimen.md_title_frame_margin_bottom)
+  internal val buttonHeightDefault = dimenPx(R.dimen.md_action_button_height)
+  internal val buttonHeightStacked = dimenPx(R.dimen.md_stacked_action_button_height)
+  internal val buttonFramePadding = dimenPx(R.dimen.md_action_button_frame_padding)
+  internal val buttonSpacing = dimenPx(R.dimen.md_action_button_spacing)
 
   var debugMode: Boolean = false
     set(value) {
@@ -53,20 +49,20 @@ internal class MDRootView(
       field = value
       requestLayout()
     }
-  private var stackButtons: Boolean = false
+  internal var stackButtons: Boolean = false
     set(value) {
       field = value
       requestLayout()
     }
 
-  private var debugPaint: Paint? = null
-  private val dividerPaint: Paint
-  private var showTopDivider = false
-  private var showBottomDivider = false
+  internal var debugPaint: Paint? = null
+  internal val dividerPaint: Paint
+  internal var showTopDivider = false
+  internal var showBottomDivider = false
 
-  private lateinit var frameMain: ViewGroup
-  private lateinit var titleView: TextView
-  private lateinit var actionButtons: Array<MDActionButton>
+  internal lateinit var frameMain: ViewGroup
+  internal lateinit var titleView: TextView
+  internal lateinit var actionButtons: Array<MDActionButton>
 
   init {
     setWillNotDraw(false)
@@ -102,62 +98,19 @@ internal class MDRootView(
   ) {
     val contentBottomPadding = getContentBottomPadding()
     if (contentBottomPadding > 0) {
-      val recyclerView = frameMain.getChildAt(1)
-      recyclerView.updatePadding(bottom = contentBottomPadding)
+      val contentView = frameMain.getChildAt(1)
+      contentView.updatePadding(bottom = contentBottomPadding)
     }
 
-    val width = MeasureSpec.getSize(widthMeasureSpec)
-    var height = MeasureSpec.getSize(heightMeasureSpec)
-    if (height > maxHeight) {
-      height = maxHeight
+    val specWidth = MeasureSpec.getSize(widthMeasureSpec)
+    var specHeight = MeasureSpec.getSize(heightMeasureSpec)
+    if (specHeight > maxHeight) {
+      specHeight = maxHeight
     }
 
-    measureButtons(width)
-    val buttonFrameHeight = getTotalButtonFrameHeight()
-    val mainFrameTopPadding = getMainFrameTopPadding()
-    val mainFrameMaxHeight =
-      height - mainFrameTopPadding - buttonFrameHeight
-    frameMain.measure(
-        MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-        MeasureSpec.makeMeasureSpec(mainFrameMaxHeight, MeasureSpec.AT_MOST)
-    )
-
-    val totalDialogHeight =
-      frameMain.measuredHeight + buttonFrameHeight + mainFrameTopPadding
-    if (totalDialogHeight < height) {
-      // We can reduce the height even more since the content doesn't need all this space
-      height = totalDialogHeight
-    }
-    setMeasuredDimension(width, height)
-  }
-
-  private fun measureButtons(parentWidth: Int) {
-    val visibleButtons = getVisibleButtons()
-    for (button in visibleButtons) {
-      button.update(theme, stackButtons)
-      if (stackButtons) {
-        button.measure(
-            MeasureSpec.makeMeasureSpec(parentWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(buttonHeightStacked, MeasureSpec.EXACTLY)
-        )
-      } else {
-        button.measure(
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-            MeasureSpec.makeMeasureSpec(buttonHeightDefault, MeasureSpec.EXACTLY)
-        )
-      }
-    }
-
-    if (visibleButtons.isNotEmpty() && !stackButtons) {
-      var totalWidth = 0
-      for (button in getVisibleButtons()) {
-        totalWidth += button.measuredWidth + buttonSpacing
-      }
-      if (totalWidth >= parentWidth) {
-        stackButtons = true
-        requestLayout()
-      }
-    }
+    measureButtons(specWidth)
+    val resultHeight = measureMain(specWidth, specHeight)
+    setMeasuredDimension(specWidth, resultHeight)
   }
 
   override fun onLayout(
@@ -323,69 +276,5 @@ internal class MDRootView(
         }
       }
     }
-  }
-
-  /** Gets the divider color, based on if the dialog is using the light or dark theme. */
-  @ColorInt
-  private fun getDividerColor(): Int {
-    val colorRes = if (theme == LIGHT) R.color.md_divider_black else R.color.md_divider_white
-    return ContextCompat.getColor(context, colorRes)
-  }
-
-  /** Gets an array of the visible action buttons (action buttons with text). */
-  private fun getVisibleButtons(): Array<MDActionButton> {
-    return actionButtons.filter { it.isVisible() }
-        .toTypedArray()
-  }
-
-  /** Buttons plus any spacing around that makes up the "frame" */
-  private fun getTotalButtonFrameHeight(): Int {
-    val visibleButtons = getVisibleButtons()
-    return when {
-      visibleButtons.isEmpty() -> 0
-      stackButtons -> (visibleButtons.size * buttonHeightStacked) + buttonFramePadding
-      else -> buttonHeightDefault + (buttonFramePadding * 2)
-    }
-  }
-
-  /** If [shouldReduceMainFrameTopPadding] returns true, 12dp else 24dp. */
-  private fun getMainFrameTopPadding(): Int {
-    return if (shouldReduceMainFrameTopPadding()) dialogFrameMarginHalf else dialogFrameMargin
-  }
-
-  /**
-   * Returns true if we want to reduce the padding of the top of the dialog from 24dp to 12dp,
-   * which happens if we are showing a list dialog with no title and no action buttons.
-   */
-  private fun shouldReduceMainFrameTopPadding(): Boolean {
-    return !titleView.isVisible()
-        && getVisibleButtons().isEmpty()
-        && frameMain.childCount > 1
-        && frameMain.getChildAt(1) is RecyclerView
-  }
-
-  /**
-   * If [shouldAddContentBottomPadding] returns false, will return 0. Otherwise,
-   * returns 24dp if we have a title frame or button frame, else 12dp.
-   */
-  private fun getContentBottomPadding(): Int {
-    return if (shouldAddContentBottomPadding()) {
-      when {
-        titleView.isVisible() -> dialogFrameMargin
-        getVisibleButtons().isNotEmpty() -> dialogFrameMargin
-        else -> dialogFrameMarginHalf
-      }
-    } else {
-      0
-    }
-  }
-
-  /**
-   * We want to add padding to the content view (the view below the title) if the content view
-   * is a RecyclerView, meaning we're showing a list dialog.
-   */
-  private fun shouldAddContentBottomPadding(): Boolean {
-    return frameMain.childCount > 1
-        && frameMain.getChildAt(1) is RecyclerView
   }
 }

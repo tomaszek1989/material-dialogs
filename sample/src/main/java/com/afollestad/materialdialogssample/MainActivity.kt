@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.activity_main.list_titled_buttons
 /** @author Aidan Follestad (afollestad) */
 class MainActivity : AppCompatActivity() {
 
-  private val debugMode = false
+  private val debugMode = true
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
