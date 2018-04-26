@@ -11,12 +11,25 @@
       style="@style/MD_Frame_Main"
       >
 
-    <TextView
-        android:id="@+id/md_text_title"
-        android:visibility="gone"
-        tools:text="Use Google's location service?"
-        style="@style/MD_Dialog_Title"
-        />
+    <RelativeLayout
+        android:id="@+id/md_title_frame"
+        style="@style/MD_Dialog_Title_Frame"
+        >
+
+      <ImageView
+          android:id="@+id/md_icon_title"
+          style="@style/MD_Dialog_Title_Icon"
+          tools:ignore="ContentDescription"
+          />
+
+      <TextView
+          android:id="@+id/md_text_title"
+          android:layout_toEndOf="@+id/md_icon_title"
+          style="@style/MD_Dialog_Title_Text"
+          tools:text="Use Google's location service?"
+          />
+
+    </RelativeLayout>
 
   </LinearLayout>
 

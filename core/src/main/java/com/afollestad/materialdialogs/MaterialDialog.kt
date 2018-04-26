@@ -35,7 +35,7 @@ class MaterialDialog(
 ) : Dialog(context, theme.styleRes) {
 
   internal val view: MDRootView = inflate(context, R.layout.md_dialog_base)
-  internal val data: MutableMap<String, Any?> = mutableMapOf()
+  internal var autoDismiss = true
 
   internal val mainFrame: LinearLayout = view.findViewById(R.id.md_frame_main)
   internal var textViewMessage: TextView? = null
@@ -44,7 +44,6 @@ class MaterialDialog(
   internal var contentRecyclerView: MDRecyclerView? = null
 
   init {
-    data[KEY_AUTO_DISMISS] = true
     setContentView(view)
     setWindowConstraints()
     view.theme = theme
@@ -91,7 +90,7 @@ class MaterialDialog(
   }
 
   fun dismissOnActionButtonClicks(dismiss: Boolean): MaterialDialog {
-    data[KEY_AUTO_DISMISS] = dismiss
+    this.autoDismiss = dismiss
     return this
   }
 
